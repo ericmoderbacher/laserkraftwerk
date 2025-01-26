@@ -9,8 +9,31 @@ project(helios_dac_sdk LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+
+
 find_package(PkgConfig)
+
+if (PKG_CONFIG_FOUND)
+    message(hi)
+else()
+    message(WARNING "pkg-config not found, attempting manual libusb search.")
+endif()
+
+
 pkg_search_module(LIBUSB REQUIRED libusb-1.0)
+
+
+if (NOT LIBUSB_FOUND)
+    # macOS: Use Homebrew's default paths for libusb
+    if (APPLE)
+        find_path(LIBUSB_INCLUDE_DIR libusb.h PATHS /usr/local/include /opt/homebrew/include)
+        find_library(LIBUSB_LIBRARY usb-1.0 PATHS /usr/local/lib /opt/homebrew/lib)
+    endif()
+endif ()
+
+message(STATUS "LIBUSB_LIBRARIES: ${LIBUSB_LIBRARIES}")
+message(STATUS "LIBUSB_INCLUDE_DIRS: ${LIBUSB_INCLUDE_DIRS}")
+
 add_subdirectory(helios_dac/sdk/cpp/idn)
 
 # Add directories for sources and headers
@@ -41,3 +64,5 @@ target_link_libraries(helios_dac PUBLIC ${LIBUSB_LIBRARIES} idn)
 
 # Ensure the test executable links to the Helios library
 #target_link_libraries(helios_test PRIVATE helios_dac)
+
+
