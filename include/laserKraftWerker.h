@@ -6,15 +6,16 @@
 #define TENOANACATLPROJECT_LASERKERNEL_H
 
 #include <functional>
-#include <HeliosDac.h>
+#include "HeliosDac.h"
+#include <cinttypes>
 
 
 class laserKraftWriteHead
         {
             std::size_t X, Y;
-            uint_8 red;
-            uint_8 green;
-            uint_8 blue;
+            std::uint8_t red;
+            std::uint8_t green;
+            std::uint8_t blue;
         };
 
 
@@ -25,7 +26,7 @@ class laserKraftWerker{ //watch out sweety, you might cut yourself on that edge!
         std::function<std::size_t(const std::size_t &)> laserKraftKernel; //esm todo validate that what i think is being said is being said.  then switch to maybe a void return type.  I think the first std::size_t is the return type of the funciont and the second one in the parenthesis () is the input types.
         laserKraftWriteHead toBe, asWas; //thatWhichHasNotComeToPass is intentionally missing
     private:
-    HeliosDac helios;
+        HeliosDac helios;
 };
 
 

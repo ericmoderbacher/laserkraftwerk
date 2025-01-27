@@ -12,8 +12,7 @@ laserKraftWerker::laserKraftWerker() {
     std::cout << "Thank you for using a laserKraftWerker to describe your laser project and manage your display" << std::endl;
 
     std::size_t attemptsToOpenDevice(0);
-    while (true)
-    {
+    while (true) {
         //this is a laser show lets get ourselves a laser!
         int numDevs = helios.OpenDevices();
 
@@ -30,5 +29,6 @@ laserKraftWerker::laserKraftWerker() {
             else
                 std::cout << "- (unknown dac)" << std::endl;
         }
+    }
 }
 
