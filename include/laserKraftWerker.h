@@ -12,22 +12,28 @@
 
 class laserKraftWriteHead
         {
-            std::size_t X, Y;
-            std::uint8_t red;
-            std::uint8_t green;
-            std::uint8_t blue;
+        public:
+            HeliosPoint Point;
         };
 
 
-class laserKraftWerker{ //watch out sweety, you might cut yourself on that edge!
-    public:
-        std::size_t screenXSize, screenYSize; //im on this kick where i like to use size_t to say "the largest unsigned integral type on your system"
-        laserKraftWerker();
-        std::function<std::size_t(const std::size_t &)> laserKraftKernel; //esm todo validate that what i think is being said is being said.  then switch to maybe a void return type.  I think the first std::size_t is the return type of the funciont and the second one in the parenthesis () is the input types.
-        laserKraftWriteHead toBe, asWas; //thatWhichHasNotComeToPass is intentionally missing
-    private:
-        HeliosDac helios;
-};
+class laserKraftWerker
+        {
+        public:
+            std::size_t screenXSize(), screenYSize(); //im on this kick where i like to use size_t to say "the largest unsigned integral type on your system"
+            std::size_t pointsPerFrame;
+            std::size_t deviceNo;
+            laserKraftWerker();
+            std::function<std::size_t(HeliosPoint &, HeliosPoint &, const std::size_t &)> kernel; //esm todo validate that what i think is being said is being said.  then switch to maybe a void return type.  I think the first std::size_t is the return type of the funciont and the second one in the parenthesis () is the input types.
+            laserKraftWriteHead toBe, asWas; //thatWhichHasNotComeToPass is intentionally missing
+
+            void start();
+            void end();
+
+
+        private:
+            HeliosDac helios;
+        };
 
 
 
