@@ -14,34 +14,41 @@ void laserKraftWerker::start() {
         return;
     }
 
-    std::array<HeliosPoint, 1000> animationFrame;
+    // Ping-pong buffers
+    std::array<HeliosPoint, 15000> bufferA, bufferB;
     HeliosPoint toBe, asWas;
-
+    bool useBufferA = true; // Flag to switch between buffers
+    std::size_t index = 0;
     while (true) { // Infinite loop to keep the laser running
-        std::size_t index = 0;
+        std::array<HeliosPoint, 15000> &currentBuffer = useBufferA ? bufferA : bufferB;
 
-        // Populate animation frame with new points
-        std::for_each(animationFrame.begin(), animationFrame.end(),
+        // Populate current buffer with new points
+
+        std::for_each(currentBuffer.begin(), currentBuffer.end(),
                       [this, &index, &toBe, &asWas](HeliosPoint &point) {
                           this->kernel(toBe, asWas, index++);
-                          point = toBe; // Store the updated point in animationFrame
+                          point = toBe; // Store the updated point
                       });
 
         // Wait for the DAC to be ready
         while (helios.GetStatus(deviceNo) != 1);
 
         // Debugging output to verify the first point
-        std::cout << "First Point: x=" << animationFrame[0].x
-                  << ", y=" << animationFrame[0].y
-                  << ", r=" << static_cast<int>(animationFrame[0].r)
-                  << ", g=" << static_cast<int>(animationFrame[0].g)
-                  << ", b=" << static_cast<int>(animationFrame[0].b)
-                  << std::endl;
+//        std::cout << "First Point (Buffer " << (useBufferA ? "A" : "B") << "): x=" << currentBuffer[0].x
+//                  << ", y=" << currentBuffer[0].y
+//                  << ", r=" << static_cast<int>(currentBuffer[0].r)
+//                  << ", g=" << static_cast<int>(currentBuffer[0].g)
+//                  << ", b=" << static_cast<int>(currentBuffer[0].b)
+//                  << std::endl;
 
         // Send frame to the laser DAC
-        helios.WriteFrame(deviceNo, 12000, HELIOS_FLAGS_DEFAULT, &animationFrame[0], 1000 );
+        helios.WriteFrame(deviceNo, 15000, HELIOS_FLAGS_DEFAULT, currentBuffer.data(), 15000);
+
+        // Swap buffers
+        useBufferA = !useBufferA;
     }
 }
+
 
 
 laserKraftWerker::laserKraftWerker() {
