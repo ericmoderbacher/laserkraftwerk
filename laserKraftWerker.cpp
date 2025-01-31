@@ -6,6 +6,8 @@
 
 #include <iostream>
 
+std::size_t frameCount = 0; // Tracks the number of frames sent to the laser
+constexpr std::size_t framesPerUpdate = 3; // Update the Game of Life every 3 frames (~5 times per second)
 
 
 void laserKraftWerker::start() {
