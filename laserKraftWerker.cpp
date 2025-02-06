@@ -35,13 +35,37 @@ void laserKraftWerker::start() {
         // Wait for the DAC to be ready
         while (helios.GetStatus(deviceNo) != 1);
 
-        // Debugging output to verify the first point
-//        std::cout << "First Point (Buffer " << (useBufferA ? "A" : "B") << "): x=" << currentBuffer[0].x
-//                  << ", y=" << currentBuffer[0].y
-//                  << ", r=" << static_cast<int>(currentBuffer[0].r)
-//                  << ", g=" << static_cast<int>(currentBuffer[0].g)
-//                  << ", b=" << static_cast<int>(currentBuffer[0].b)
-//                  << std::endl;
+
+//        // 1. Test GetStatus()
+//        int status = helios.GetStatus(deviceNo);
+//        std::cout << "GetStatus() returned: " << status << std::endl;
+//
+//        // 2. Test GetFirmwareVersion()
+//        int firmwareVersion = helios.GetFirmwareVersion(deviceNo);
+//        std::cout << "GetFirmwareVersion() returned: " << firmwareVersion << std::endl;
+//
+//        // 3. Test GetName(char* name)
+//        {
+//            char* currentName = new char[128];
+//            int result = helios.GetName(deviceNo,currentName);
+//            if (result == 0) // Assuming 0 is success; this depends on the API.
+//            {
+//                std::cout << "GetName() succeeded, name is: " << currentName << std::endl;
+//            }
+//            else
+//            {
+//                std::cerr << "GetName() failed with error code: " << currentName << std::endl;
+//            }
+//        }
+//
+//        // 5. Test GetSupportsHigherResolutions()
+//        {
+//            int supportsHighRes = helios.GetSupportsHigherResolutions(deviceNo);
+//            std::cout << "GetSupportsHigherResolutions() returned: " << supportsHighRes << std::endl;
+//            // Interpretation of 'supportsHighRes' is vendor-specific:
+//            // e.g., 0 = not supported, 1 = supported, or any other scheme defined by the device.
+//        }
+
 
         // Send frame to the laser DAC
         helios.WriteFrame(deviceNo, 15000, HELIOS_FLAGS_DEFAULT, currentBuffer.data(), 15000);
